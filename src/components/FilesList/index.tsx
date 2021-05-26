@@ -37,6 +37,7 @@ interface IPost {
     key: string;
     url: string;
     createdAt: string;
+    user: string,
 }
 
 interface Props {
@@ -53,7 +54,7 @@ interface Subfolder {
 }
 
 export function FilesList({ folderSrc, updateListIndex }: Props) {
-    const { getFiles, filteredFiles, uploadedFiles, isLoading, setOpenDropdown, openDropdown, setFolder } = useFiles();
+    const { getFiles, filteredFiles, uploadedFiles, isLoading, setOpenDropdown, openDropdown, setFolder, getUsers, users } = useFiles();
     const [fileId, setFileId] = useState('');
     const [fileName, setFileName] = useState('');
     const [fileSize, setFileSize] = useState('');
@@ -68,6 +69,10 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
         getSubFolders();
     }, [folderSrc, updateListIndex]);
 
+    useEffect(() => {
+        getUsers();
+    }, []);
+
     async function getSubFolders() {
         const { data } = await api.get(`subfolders/${folderSrc}`);
 
@@ -76,6 +81,17 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                 return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
             }));
         }
+    }
+
+    function getUserName(id: string) {
+        var aux;
+        users.map(user => {
+            if (user._id === id) {
+                aux = user.name;
+            }
+        })
+
+        return aux;
     }
 
     function getExtension(fileName: string) {
@@ -142,6 +158,7 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                             <th>Nome <img src={downArrowSVG} alt="down-arrow" /></th>
                             <th>Tamanho <img src={downArrowSVG} alt="down-arrow" /></th>
                             <th>Tipo</th>
+                            <th>Usuário</th>
                             <th>Data de inclusão <img src={downArrowSVG} alt="down-arrow" /></th>
                             <th>Ação</th>
                         </tr>
@@ -155,6 +172,7 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                                 <td>{subfolder.name}</td>
                                 <td></td>
                                 <td>pasta</td>
+                                <td></td>
                                 <td>{getFormattedDate(subfolder.createdAt)}</td>
                                 <td></td>
                             </tr>
@@ -174,6 +192,7 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                                 </td>
                                 <td>{filesize(file.size)}</td>
                                 <td>{getExtension(file.name)}</td>
+                                <td>{getUserName(file.user)}</td>
                                 <td>{getFormattedDate(file.createdAt)}</td>
                                 <td>
                                     <button onClick={() => {

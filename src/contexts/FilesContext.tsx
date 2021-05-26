@@ -18,6 +18,7 @@ export interface IPost {
     key: string;
     url: string;
     createdAt: string,
+    user: string,
 }
 
 export interface IFolder {
@@ -67,7 +68,9 @@ interface IFileContextData {
     handleUpload(file: any): void;
     getFiles: () => Promise<void>;
     getFilteredFiles: (search: string) => void;
+    getFilteredFolders: (search: string) => void;
     filteredFiles: IPost[];
+    filteredFolders: IFolder[];
     setUploadedFiles: (files: IFile[]) => void;
     setFolder: (folder: IFolder) => void;
     setIsLoading: (aux: boolean) => void;
@@ -84,6 +87,7 @@ const FileProvider: React.FC = ({ children }) => {
     const [files, setFiles] = useState<IPost[]>([]);
     const [uploadedFiles, setUploadedFiles] = useState<IFile[]>([]);
     const [filteredFiles, setFilteredFiles] = useState<IPost[]>([]);
+    const [filteredFolders, setFilteredFolders] = useState<IFolder[]>([]);
     const [users, setUsers] = useState([]);
     const [folder, setFolder] = useState<IFolder>();
     const [groupCallBack, setGroupCallBack] = useState<IFolder>();
@@ -171,6 +175,14 @@ const FileProvider: React.FC = ({ children }) => {
         );
     }
 
+    function getFilteredFolders(search: string) {
+        setFilteredFolders(
+            allFolders.filter(folder => {
+                return folder.name.toLowerCase().includes(search.toLowerCase())
+            })
+        );
+    }
+
     const processUpload =
         (uploadedFile: IFile) => {
             const data = new FormData();
@@ -254,6 +266,8 @@ const FileProvider: React.FC = ({ children }) => {
             callBackFolder,
             getFolders,
             setGroupCallBack,
+            getFilteredFolders,
+            filteredFolders
         }}>
             {children}
         </FilesContext.Provider>
