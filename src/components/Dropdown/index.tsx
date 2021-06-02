@@ -1,5 +1,3 @@
-import React, { Dispatch, SetStateAction } from 'react';
-
 import { Container, MenuItem, Titulo, Subtitulo } from './styles';
 
 import downloadSVG from '../../assets/file-download.svg';

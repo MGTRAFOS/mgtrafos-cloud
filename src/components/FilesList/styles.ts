@@ -54,6 +54,14 @@ export const Container = styled.div`
                 background: transparent;
                 font-size: 2rem;
             }
+
+            div {
+                img {
+                width: 1.5rem;
+                height: 1.5rem;
+                cursor: pointer;
+                }
+            }
         } 
 
         img {

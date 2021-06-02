@@ -15,8 +15,10 @@ import png from '../../assets/png.svg';
 import doc from '../../assets/doc.svg';
 import folderSVG from '../../assets/folder-blue.svg';
 import downArrowSVG from '../../assets/down-arrow.svg';
+import trashSVG from '../../assets/trash.svg';
 
 import api from '../../services/api';
+import { toast, ToastContainer } from 'react-toastify';
 
 export interface IFile {
     id: string;
@@ -72,6 +74,12 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
     useEffect(() => {
         getUsers();
     }, []);
+
+    async function handleRemoveFolder(id: string) {
+        await api.delete(`folders/${id}`);
+        setSubfolders((state) => state.filter((folder) => folder._id !== id));
+        return toast.success('pasta deletada com sucesso');
+    }
 
     async function getSubFolders() {
         const { data } = await api.get(`subfolders/${folderSrc}`);
@@ -132,6 +140,7 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
 
     return (
         <Container>
+            <ToastContainer />
             {openDropdown && (
                 <Dropdown
                     id={fileId}
@@ -174,7 +183,15 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                                 <td>pasta</td>
                                 <td></td>
                                 <td>{getFormattedDate(subfolder.createdAt)}</td>
-                                <td></td>
+                                <td>
+                                    <div>
+                                        <img src={trashSVG} alt="lixeira"
+                                            onClick={() => {
+                                                window.confirm(`Tem certeza que deseja excluir a pasta: ${subfolder.name}?`) &&
+                                                    handleRemoveFolder(subfolder._id)
+                                            }} />
+                                    </div>
+                                </td>
                             </tr>
                         ))}
 
