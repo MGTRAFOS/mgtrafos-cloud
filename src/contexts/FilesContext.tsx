@@ -68,9 +68,8 @@ interface IFileContextData {
     handleUpload(file: any): void;
     getFiles: () => Promise<void>;
     getFilteredFiles: (search: string) => void;
-    getFilteredFolders: (search: string) => void;
     filteredFiles: IPost[];
-    filteredFolders: IFolder[];
+    searchString: string;
     setUploadedFiles: (files: IFile[]) => void;
     setFolder: (folder: IFolder) => void;
     setIsLoading: (aux: boolean) => void;
@@ -80,6 +79,8 @@ interface IFileContextData {
     callBackFolder: (folderSrc: string) => void;
     getFolders: () => Promise<void>;
     setGroupCallBack: (group: IFolder) => void;
+    getSearchString: (search: string) => void;
+
 }
 const FilesContext = createContext<IFileContextData>({} as IFileContextData);
 
@@ -87,13 +88,13 @@ const FileProvider: React.FC = ({ children }) => {
     const [files, setFiles] = useState<IPost[]>([]);
     const [uploadedFiles, setUploadedFiles] = useState<IFile[]>([]);
     const [filteredFiles, setFilteredFiles] = useState<IPost[]>([]);
-    const [filteredFolders, setFilteredFolders] = useState<IFolder[]>([]);
     const [users, setUsers] = useState([]);
     const [folder, setFolder] = useState<IFolder>();
     const [groupCallBack, setGroupCallBack] = useState<IFolder>();
     const [allFolders, setAllFolders] = useState<IFolder[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
+    const [searchString, setSearchString] = useState('');
 
     useEffect(() => {
         return () => {
@@ -175,12 +176,8 @@ const FileProvider: React.FC = ({ children }) => {
         );
     }
 
-    function getFilteredFolders(search: string) {
-        setFilteredFolders(
-            allFolders.filter(folder => {
-                return folder.name.toLowerCase().includes(search.toLowerCase())
-            })
-        );
+    function getSearchString(search: string) {
+        setSearchString(search);
     }
 
     const processUpload =
@@ -266,8 +263,8 @@ const FileProvider: React.FC = ({ children }) => {
             callBackFolder,
             getFolders,
             setGroupCallBack,
-            getFilteredFolders,
-            filteredFolders
+            getSearchString,
+            searchString,
         }}>
             {children}
         </FilesContext.Provider>

@@ -56,12 +56,24 @@ interface Subfolder {
 }
 
 export function FilesList({ folderSrc, updateListIndex }: Props) {
-    const { getFiles, filteredFiles, uploadedFiles, isLoading, setOpenDropdown, openDropdown, setFolder, getUsers, users } = useFiles();
+    const {
+        getFiles,
+        filteredFiles,
+        searchString,
+        uploadedFiles,
+        isLoading,
+        setOpenDropdown,
+        openDropdown,
+        setFolder,
+        getUsers,
+        users
+    } = useFiles();
     const [fileId, setFileId] = useState('');
     const [fileName, setFileName] = useState('');
     const [fileSize, setFileSize] = useState('');
     const [fileUrl, setFileUrl] = useState('');
     const [subfolders, setSubfolders] = useState<Subfolder[]>([]);
+    const [filteredSubfolders, setFilteredSubfolders] = useState<Subfolder[]>([]);
 
     useEffect(() => {
         getFiles();
@@ -70,6 +82,10 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
     useEffect(() => {
         getSubFolders();
     }, [folderSrc, updateListIndex]);
+
+    useEffect(() => {
+        filterSubFolders();
+    }, [searchString]);
 
     useEffect(() => {
         getUsers();
@@ -88,7 +104,17 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
             setSubfolders(data.sort((a: Subfolder, b: Subfolder) => {
                 return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
             }));
+
+            setFilteredSubfolders(data);
         }
+    }
+
+    function filterSubFolders() {
+        setFilteredSubfolders(
+            subfolders.filter(subfolder => {
+                return subfolder.name.toLowerCase().includes(searchString.toLowerCase());
+            })
+        );
     }
 
     function getUserName(id: string) {
@@ -173,7 +199,7 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {subfolders.map((subfolder: Subfolder) => (
+                        {filteredSubfolders.map((subfolder: Subfolder) => (
                             <tr key={subfolder._id} onClick={() => {
                                 setFolder(subfolder);
                             }}>

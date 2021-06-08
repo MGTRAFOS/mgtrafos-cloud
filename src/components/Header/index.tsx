@@ -18,7 +18,7 @@ interface HeaderProps {
 }
 
 export function Header({ onOpenNewUploadModal }: HeaderProps) {
-    const { files, getFilteredFiles, getFilteredFolders } = useFiles();
+    const { files, getFilteredFiles, getSearchString } = useFiles();
     const [search, setSearch] = useState('');
     const [openMenu, setOpenMenu] = useState(false);
 
@@ -26,7 +26,7 @@ export function Header({ onOpenNewUploadModal }: HeaderProps) {
 
     useEffect(() => {
         getFilteredFiles(search);
-        getFilteredFolders(search);
+        getSearchString(search);
     }, [search, files]);
 
     return (
