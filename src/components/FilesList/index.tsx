@@ -16,9 +16,13 @@ import doc from '../../assets/doc.svg';
 import folderSVG from '../../assets/folder-blue.svg';
 import downArrowSVG from '../../assets/down-arrow.svg';
 import trashSVG from '../../assets/trash.svg';
+import editSVG from '../../assets/edit.svg';
+import Modal from 'react-modal';
 
 import api from '../../services/api';
 import { toast, ToastContainer } from 'react-toastify';
+
+Modal.setAppElement('#root');
 
 export interface IFile {
     id: string;
@@ -66,7 +70,8 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
         openDropdown,
         setFolder,
         getUsers,
-        users
+        users,
+        folder
     } = useFiles();
     const [fileId, setFileId] = useState('');
     const [fileName, setFileName] = useState('');
@@ -74,6 +79,9 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
     const [fileUrl, setFileUrl] = useState('');
     const [subfolders, setSubfolders] = useState<Subfolder[]>([]);
     const [filteredSubfolders, setFilteredSubfolders] = useState<Subfolder[]>([]);
+    const [folderEditProps, setFolderEditProps] = useState<Subfolder>();
+    const [folderEditNewName, setFolderEditNewName] = useState('');
+    const [openRenameSubFolderModal, setOpenRenameSubFolderModal] = useState(false);
 
     useEffect(() => {
         getFiles();
@@ -106,6 +114,18 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
             }));
 
             setFilteredSubfolders(data);
+        }
+    }
+
+    async function handleRenameSubfolder() {
+        if (folder) {
+            await api.put('/folders', {
+                _id: folder._id,
+                newName: folderEditNewName
+            })
+            return toast.success('Nome da pasta foi alterado com sucesso');
+        } else {
+            return toast.success('Erroa ao alterar nome da pasta');
         }
     }
 
@@ -166,6 +186,49 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
 
     return (
         <Container>
+            <Modal
+                isOpen={openRenameSubFolderModal}
+                onRequestClose={() => setOpenRenameSubFolderModal(false)}
+                overlayClassName="react-modal-overlay"
+                className="react-modal-content"
+            >
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div>
+                        <span>Nome da pasta: </span>
+                        <input type="text" value={folderEditProps?.name} disabled
+                            style={{ width: 'auto', marginLeft: '1rem', fontSize: '1rem', opacity: '1' }}
+                        />
+                    </div>
+
+                    <div style={{ marginTop: '1rem' }}>
+                        <span>Novo nome da pasta: </span>
+                        <input type="text" value={folderEditNewName}
+                            style={{ width: 'auto', marginLeft: '1rem', fontSize: '1rem', opacity: '1' }}
+                            onChange={e => setFolderEditNewName(e.target.value)}
+                        />
+                    </div>
+
+                    <div>
+                        <button
+                            style={{ 
+                                background: "#30E383", 
+                                color:"#ffff", 
+                                border: "1px solid#30E383", 
+                                padding: '0.5rem 2rem', 
+                                borderRadius: '4px',
+                                marginTop: '1rem'
+                            }}
+                            onClick={() => {
+                                setOpenRenameSubFolderModal(false);
+                                handleRenameSubfolder()
+                            }}>
+                            Alterar
+                                </button>
+                    </div>
+
+                </div>
+            </Modal>
+
             <ToastContainer />
             {openDropdown && (
                 <Dropdown
@@ -192,7 +255,6 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                             <th></th>
                             <th>Nome <img src={downArrowSVG} alt="down-arrow" /></th>
                             <th>Tamanho <img src={downArrowSVG} alt="down-arrow" /></th>
-                            <th>Tipo</th>
                             <th>Usuário</th>
                             <th>Data de inclusão <img src={downArrowSVG} alt="down-arrow" /></th>
                             <th>Ação</th>
@@ -206,7 +268,6 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                                 <td><img src={folderSVG} alt="foldersvg" /></td>
                                 <td>{subfolder.name}</td>
                                 <td></td>
-                                <td>pasta</td>
                                 <td></td>
                                 <td>{getFormattedDate(subfolder.createdAt)}</td>
                                 <td>
@@ -216,6 +277,10 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                                                 window.confirm(`Tem certeza que deseja excluir a pasta: ${subfolder.name}?`) &&
                                                     handleRemoveFolder(subfolder._id)
                                             }} />
+                                        <img src={editSVG} alt="edit" onClick={() => {
+                                            setOpenRenameSubFolderModal(true)
+                                            setFolderEditProps(subfolder)
+                                        }} />
                                     </div>
                                 </td>
                             </tr>
@@ -233,8 +298,7 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                                         {file.name}
                                     </a>
                                 </td>
-                                <td>{filesize(file.size)}</td>
-                                <td>{getExtension(file.name)}</td>
+                                <td>{filesize(file.size)}</td>                                
                                 <td>{getUserName(file.user)}</td>
                                 <td>{getFormattedDate(file.createdAt)}</td>
                                 <td>
