@@ -50,12 +50,6 @@ export function UploadModal({ isOpen, onRequestClose }: NewUploadModalProps) {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "application/vnd.ms-word.document.macroEnabled.12",
             "application/vnd.ms-project",
-            "application/msproj",
-            "application/x-msproject",
-            "application/x-ms-project",
-            "application/x-dos_ms_project",
-            "application/mpp",
-            "zz-application/zz-winassoc-mpp",
         ],
         onDrop,
     });
