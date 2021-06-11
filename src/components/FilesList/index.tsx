@@ -176,6 +176,9 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
 
             case 'doc':
                 return doc;
+
+            case 'docx':
+                return doc;
         }
     }
 
@@ -210,11 +213,11 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
 
                     <div>
                         <button
-                            style={{ 
-                                background: "#30E383", 
-                                color:"#ffff", 
-                                border: "1px solid#30E383", 
-                                padding: '0.5rem 2rem', 
+                            style={{
+                                background: "#30E383",
+                                color: "#ffff",
+                                border: "1px solid#30E383",
+                                padding: '0.5rem 2rem',
                                 borderRadius: '4px',
                                 marginTop: '1rem'
                             }}
@@ -223,7 +226,7 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                                 handleRenameSubfolder()
                             }}>
                             Alterar
-                                </button>
+                        </button>
                     </div>
 
                 </div>
@@ -298,7 +301,7 @@ export function FilesList({ folderSrc, updateListIndex }: Props) {
                                         {file.name}
                                     </a>
                                 </td>
-                                <td>{filesize(file.size)}</td>                                
+                                <td>{filesize(file.size)}</td>
                                 <td>{getUserName(file.user)}</td>
                                 <td>{getFormattedDate(file.createdAt)}</td>
                                 <td>

@@ -83,6 +83,9 @@ export function QuickAccess({ folderSrc, updateListIndex }: Props) {
 
             case 'doc':
                 return doc;
+
+            case 'docx':
+                return doc;
         }
     }
 
