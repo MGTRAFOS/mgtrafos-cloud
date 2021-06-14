@@ -5,6 +5,7 @@ import pdf from '../../assets/pdf.svg';
 import xls from '../../assets/xls.svg';
 import jpg from '../../assets/jpg.svg';
 import png from '../../assets/png.svg';
+import ppt from '../../assets/ppt.svg';
 import doc from '../../assets/doc.svg';
 import folderSVG from '../../assets/folder-blue.svg';
 
@@ -86,6 +87,12 @@ export function QuickAccess({ folderSrc, updateListIndex }: Props) {
 
             case 'docx':
                 return doc;
+
+            case 'pptx':
+                return ppt;
+
+            case 'ppt':
+                return ppt;
         }
     }
 

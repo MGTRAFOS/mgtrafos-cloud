@@ -37,7 +37,7 @@ export function UploadModal({ isOpen, onRequestClose }: NewUploadModalProps) {
         isDragActive,
         isDragReject,
     } = useDropzone({
-        accept: [
+       /*  accept: [
             "image/jpeg",
             "image/pjpeg",
             "image/png",
@@ -50,7 +50,7 @@ export function UploadModal({ isOpen, onRequestClose }: NewUploadModalProps) {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "application/vnd.ms-word.document.macroEnabled.12",
             "application/vnd.ms-project",
-        ],
+        ], */
         onDrop,
     });
 
