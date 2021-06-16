@@ -111,6 +111,17 @@ export const GlobalStyle = createGlobalStyle`
         overflow: auto;
     }
 
+    .react-modal-content-link {
+        width: 100%;
+        max-width: 50vw;
+        max-height: 70vh;
+        background: var(--background);
+        padding: 3rem;
+        position: relative;
+        border-radius: 0.25rem;
+        overflow: auto;
+    }
+
     .react-modal-content-users {
         width: 100%;
         max-width: 70vw;
