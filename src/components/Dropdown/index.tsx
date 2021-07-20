@@ -34,11 +34,6 @@ export function Dropdown({ id, name, size, url }: FileInfo) {
     const { deleteFile, setOpenDropdown } = useFiles();
     const [openModalLink, setOpenModalLink] = useState(false);
 
-    function handleOpenModalLink() {
-        setOpenModalLink(true);
-        //setOpenDropdown(false);
-    }
-
     function getExtension(fileName: string) {
         return fileName.split('.').pop();
     }
