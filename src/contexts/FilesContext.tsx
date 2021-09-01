@@ -151,7 +151,9 @@ const FileProvider: React.FC = ({ children }) => {
         if (folder) {
             await api.get(`posts/${folder._id}`).then((response) => {
                 const { data } = response;
-                setFiles(data);
+                setFiles(data.sort((a: IFile, b: IFile) => {
+                    return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+                }));
                 setIsLoading(false);
             }).catch(response => {
                 console.log(response);
